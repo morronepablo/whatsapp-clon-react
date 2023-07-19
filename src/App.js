@@ -7,6 +7,8 @@ import "./App.css";
 import ChatListItem from "./components/ChatListItem";
 import ChatIntro from "./components/ChatIntro";
 import ChatWindow from "./components/ChatWindow";
+import NewChat from "./components/NewChat";
+import Login from "./components/Login";
 
 function App() {
   const [chatList, setChatList] = useState([
@@ -32,22 +34,43 @@ function App() {
     },
   ]);
   const [activeChat, setActiveChat] = useState({});
-  const [user, setUser] = useState({
-    id: 1234,
-    avatar: "https://www.w3schools.com/howto/img_avatar2.png",
-    name: "Pablo Morrone",
-  });
+  const [user, setUser] = useState(null);
+
+  const [showNewChat, setShowNewChat] = useState(false);
+
+  const handleNewChat = () => {
+    setShowNewChat(true);
+  };
+
+  const handleLoginData = async (u) => {
+    let newUser = {
+      id: u.uid,
+      name: u.displayName,
+      avatar: u.photoURL,
+    };
+    setUser(newUser);
+  };
+
+  if (user === null) {
+    return <Login onReceive={handleLoginData} />;
+  }
 
   return (
     <div className="app-window">
       <div className="sidebar">
+        <NewChat
+          chatList={chatList}
+          user={user}
+          show={showNewChat}
+          setShow={setShowNewChat}
+        />
         <header>
           <img className="header--avatar" src={user.avatar} alt="Avatar" />
           <div className="header--buttons">
             <div className="header--btn">
               <DonutLargeIcon style={{ color: "#919191" }} />
             </div>
-            <div className="header--btn">
+            <div onClick={handleNewChat} className="header--btn">
               <ChatIcon style={{ color: "#919191" }} />
             </div>
             <div className="header--btn">
